@@ -5,6 +5,7 @@ import { ConfigModule as NestConfigModule } from '@nestjs/config';
 import { AdministrationModule } from './modules/administration/administration.module';
 import { AuthenticationModule } from './modules/authentication/authentication.module';
 import { ConfigModule } from './modules/config/config.module';
+import { AuthenticationGuard } from './modules/authentication/authentication.guard';
 
 @Module({
   imports: [
@@ -17,6 +18,8 @@ import { ConfigModule } from './modules/config/config.module';
     ConfigModule,
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [
+    { provide: 'AuthenticationGuard', useClass: AuthenticationGuard },
+  ],
 })
 export class AppModule {}

@@ -8,6 +8,12 @@ import { ConfigService } from '../config/config.service';
 
 export type TGenerateTokenUserInput = Pick<UserEntity, 'id' | 'email'>;
 
+export type TAuthenticationToken = {
+  id: string;
+  email: string;
+  expiration: string;
+};
+
 @Injectable()
 export class AuthenticationService {
   @Inject()
@@ -68,5 +74,11 @@ export class AuthenticationService {
     const token = await this.jwtService.signAsync(payload);
 
     return token;
+  }
+
+  async validateToken(token: TAuthenticationToken): Promise<UserEntity | null> {
+    const user = await this.usersService.findOneWhere({ id: token.id });
+
+    return user ?? null;
   }
 }

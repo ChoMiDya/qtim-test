@@ -8,6 +8,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.useGlobalGuards(app.get('AuthenticationGuard'));
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

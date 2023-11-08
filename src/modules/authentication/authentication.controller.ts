@@ -9,6 +9,7 @@ import {
 import { AuthenticationService } from './authentication.service';
 import { LoginDTO } from './dto/login.DTO';
 import { UserEntity } from '../administration/entities/user.entity';
+import { AllowAnonymous } from './allow-anonymous.decorator';
 
 export type TRequest = Request & {
   user: Omit<UserEntity, 'password'>;
@@ -20,6 +21,7 @@ export class AuthenticationController {
   private authenticationService: AuthenticationService;
 
   @Post('user/login')
+  @AllowAnonymous()
   async login(@Body() input: LoginDTO) {
     const result = await this.authenticationService.login(input);
 
@@ -31,6 +33,7 @@ export class AuthenticationController {
   }
 
   @Post('user/exchangeToken')
+  @AllowAnonymous()
   async exchangeToken(@Req() req: TRequest) {
     const result = await this.authenticationService.exchangeToken(req.user);
 
