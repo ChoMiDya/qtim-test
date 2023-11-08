@@ -1,24 +1,26 @@
 import { dataSource } from 'src/config/typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { RegistrationDTO } from '../dto/registration.DTO';
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { hash } from 'bcrypt';
 
 export class UserService {
   private userRepository = dataSource.getRepository(UserEntity);
 
+  getRepository() {
+    return this.userRepository;
+  }
+
   private validatePassword(password: string) {
     if (password.length < 8 || password.length > 14) {
-      throw new HttpException(
+      throw new BadRequestException(
         'Password must be between 8 and 14 characters',
-        HttpStatus.CONFLICT,
       );
     }
 
     if (!/^[A-Za-z0-9.,:;?!+*%\-\<\>@\[\]\{\}/\\_$#]*$/.test(password)) {
-      throw new HttpException(
+      throw new BadRequestException(
         'Password must be composed only the letters А-z and symbols (. , : ; ? ! * + % - < > @ [ ] { } / \\ _ $ #)',
-        HttpStatus.CONFLICT,
       );
     }
   }
@@ -35,7 +37,7 @@ export class UserService {
     });
 
     if (existUser) {
-      throw new HttpException('User already exists', HttpStatus.CONFLICT);
+      throw new BadRequestException('User already exists');
     }
 
     const hashPassword = await UserService.generatePassword(password);
@@ -48,5 +50,23 @@ export class UserService {
 
   static async generatePassword(plainPassword: string) {
     return hash(plainPassword, 10);
+  }
+
+  async findOneWhere(args: {
+    email?: string;
+    id?: string;
+  }): Promise<UserEntity | null> {
+    const { email, id } = args;
+
+    if (!email && !id) {
+      return null;
+    }
+
+    return this.userRepository.findOne({
+      where: {
+        email,
+        id,
+      },
+    });
   }
 }
