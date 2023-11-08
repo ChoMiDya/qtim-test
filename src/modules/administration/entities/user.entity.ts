@@ -1,4 +1,5 @@
-import { Column, Entity } from 'typeorm';
+import { NewsEntity } from 'src/modules/news/entities/news.entity';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity('users')
 export class UserEntity {
@@ -21,4 +22,7 @@ export class UserEntity {
     select: false,
   })
   password: string;
+
+  @OneToMany(() => NewsEntity, (news) => news.author)
+  news?: NewsEntity[];
 }
