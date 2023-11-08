@@ -51,22 +51,4 @@ export class UserService {
   static async generatePassword(plainPassword: string) {
     return hash(plainPassword, 10);
   }
-
-  async findOneWhere(args: {
-    email?: string;
-    id?: string;
-  }): Promise<UserEntity | null> {
-    const { email, id } = args;
-
-    if (!email && !id) {
-      return null;
-    }
-
-    return this.userRepository.findOne({
-      where: {
-        email,
-        id,
-      },
-    });
-  }
 }

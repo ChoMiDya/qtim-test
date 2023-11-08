@@ -7,7 +7,7 @@ export class UpdateNewsInputDTO {
   @IsString()
   @IsNotEmpty()
   @IsOptional()
-  header: string | undefined;
+  header?: string;
 
   @IsString()
   @IsNotEmpty()

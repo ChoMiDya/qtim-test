@@ -10,7 +10,7 @@ export class NewsService {
   private newsRepository = dataSource.getRepository(NewsEntity);
 
   async getList(input: NewsListInputDTO): Promise<[NewsEntity[], number]> {
-    const { skip, take, authorId, date } = input;
+    const { skip, take = 25, authorId, date } = input;
     const where: FindOptionsWhere<NewsEntity> = {};
 
     if (authorId) {
