@@ -1,6 +1,6 @@
 import { dataSource } from 'src/config/typeorm';
 import { UserEntity } from '../entities/user.entity';
-import { RegistrationDTO } from '../dto/registration.DTO';
+import { RegistrationInputDTO } from '../dto/registration-input.DTO';
 import { BadRequestException } from '@nestjs/common';
 import { hash } from 'bcrypt';
 
@@ -25,7 +25,7 @@ export class UserService {
     }
   }
 
-  async registration(input: RegistrationDTO): Promise<UserEntity> {
+  async registration(input: RegistrationInputDTO): Promise<UserEntity> {
     const { password, email } = input;
 
     this.validatePassword(password);

@@ -1,19 +1,8 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Inject,
-  Post,
-  Req,
-} from '@nestjs/common';
+import { Body, Controller, Inject, Post } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
-import { LoginDTO } from './dto/login.DTO';
-import { UserEntity } from '../administration/entities/user.entity';
+import { LoginInputDTO } from './dto/login-input.DTO';
 import { AllowAnonymous } from './allow-anonymous.decorator';
-
-export type TRequest = Request & {
-  user: Omit<UserEntity, 'password'>;
-};
+import { ExchangeTokenInputDTO } from './dto/exchange-token-input.DTO';
 
 @Controller()
 export class AuthenticationController {
@@ -22,25 +11,13 @@ export class AuthenticationController {
 
   @Post('user/login')
   @AllowAnonymous()
-  async login(@Body() input: LoginDTO) {
-    const result = await this.authenticationService.login(input);
-
-    if (!result) {
-      throw new BadRequestException('incorrect email or password');
-    }
-
-    return result;
+  async login(@Body() input: LoginInputDTO) {
+    return this.authenticationService.login(input);
   }
 
   @Post('user/exchangeToken')
   @AllowAnonymous()
-  async exchangeToken(@Req() req: TRequest) {
-    const result = await this.authenticationService.exchangeToken(req.user);
-
-    if (!result) {
-      throw new BadRequestException('incorrect email or password');
-    }
-
-    return result;
+  async exchangeToken(@Body() { token }: ExchangeTokenInputDTO) {
+    return this.authenticationService.exchangeToken(token);
   }
 }
